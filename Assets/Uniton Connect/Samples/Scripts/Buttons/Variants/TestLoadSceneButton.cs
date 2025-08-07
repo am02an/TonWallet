@@ -9,6 +9,7 @@ namespace UnitonConnect.Core.Demo
 
         public sealed override void OnClick()
         {
+            LoadingScreen.Instance.StartLoading();
             SceneManager.LoadScene(_sceneId);
         }
     }

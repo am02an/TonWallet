@@ -6,6 +6,7 @@ using UnitonConnect.Core.Data;
 using UnitonConnect.Core.Utils;
 using UnitonConnect.Runtime.Data;
 using UnitonConnect.DeFi;
+using System.Collections;
 
 namespace UnitonConnect.Core.Demo
 {
@@ -18,6 +19,7 @@ namespace UnitonConnect.Core.Demo
         [SerializeField] private Button _sendTransactionButton;
         [SerializeField] private Button _sendJettonTransactionButton;
         [SerializeField] private Button _openNftCollectionButton;
+       
         [SerializeField, Space] private TestWalletNftCollectionsPanel _nftCollectionPanel;
 
         private UnitonConnectSDK _unitonSDK;
@@ -87,7 +89,7 @@ namespace UnitonConnect.Core.Demo
         private void Start()
         {
             _unitonSDK.Initialize();
-
+          //  StartCoroutine(ShowLoadingScreen());
             if (!_unitonSDK.IsWalletConnected)
             {
                 _disconnectButton.interactable = false;
@@ -335,5 +337,7 @@ namespace UnitonConnect.Core.Demo
             _debugMessage.text = $"Failed to send NFT item" +
                 $" with address: {nftItemAddress}, reason: {errorMessage}";
         }
+       
     }
+
 }
