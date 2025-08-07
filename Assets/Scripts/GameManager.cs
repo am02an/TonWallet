@@ -71,4 +71,8 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reloads current scene
     }
+    public void BACKTOMAinMEnu()
+    {
+        SceneManager.LoadScene(0); // Reloads current scene
+    }
 }
