@@ -1,0 +1,22 @@
+{
+    "name": "com.veittech.uniton.connect",
+    "version": "0.5.1",
+    "displayName": "Uniton Connect",
+    "description": "A library for convenient work with the Ton ecosystem inside web applications on Unity.",
+    "unity": "2020.3",
+    "unityRelease": "0f6",
+    "keywords": [
+      "Unity",
+      "Telegram",
+      "TonConnect",
+      "Ton",
+      "TheOpenNetwork",
+      "WebGL"
+    ],
+    "author": 
+    {
+      "name": "MrVeit",
+      "email": "misster.veit@gmail.com",
+      "url": "https://github.com/MrVeit/Veittech-UnitonConnect"
+    }
+  }
