@@ -1,13 +1,18 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement; // Needed for restarting
+using UnityEngine.SceneManagement; // Needed for scene changes
 
 public class GameManager : MonoBehaviour
 {
+    [Header("UI References")]
     public TMP_Text scoreText;
-    public GameObject gameOverPanel; // Reference to the Game Over panel
+    public GameObject gameOverPanel; // Game Over panel reference
 
+    [Header("Gameplay Settings")]
+    public GameObject game;
+
+    // Static gameplay variables
     public static bool isPlaying = true;
     public static float ObsVelocity = 0.2f;
     public static float BGVelocity = 0.01f;
@@ -17,16 +22,29 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        // Optional: Start game automatically or wait for Play button
+        if (game != null)
+            game.SetActive(false);
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
+
+        UpdateScoreText();
+    }
+
+    public void StartGame()
+    {
         isPlaying = true;
+        Debug.Log(isPlaying);
         Score = 0;
         ObsVelocity = 0.2f;
         BGVelocity = 0.01f;
+        timer = 0f;
+
         UpdateScoreText();
 
         if (gameOverPanel != null)
-        {
-            gameOverPanel.SetActive(false); // Hide at start
-        }
+            gameOverPanel.SetActive(false);
     }
 
     private void Update()
@@ -48,31 +66,77 @@ public class GameManager : MonoBehaviour
         else
         {
             if (gameOverPanel != null && !gameOverPanel.activeSelf)
-            {
-                gameOverPanel.SetActive(true); // Show Game Over UI
-            }
+                gameOverPanel.SetActive(true);
         }
     }
 
     private void UpdateScoreText()
     {
         if (scoreText != null)
-        {
-            scoreText.text = "" + Score;
-        }
+            scoreText.text = Score.ToString();
         else
-        {
-            Debug.LogWarning("scoreText is not assigned in the GameManager script.");
-        }
+            Debug.LogWarning("ScoreText is not assigned in the inspector.");
     }
 
-    // Called from the Restart Button
+    // Called from Restart button
     public void RestartGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reloads current scene
+        // Find all obstacles in the scene
+        ObstacleLogic[] obstacles = FindObjectsOfType<ObstacleLogic>();
+        PlayerController player = FindObjectOfType<PlayerController>();
+        // Reset each obstacle's position
+        foreach (ObstacleLogic obstacle in obstacles)
+        {
+            if (obstacle != null)
+                obstacle.ResetPosition();
+        }
+        player.ResetPlayerPosition();
+
+        // Restart the gameplay state
+        StartGame();
     }
+
+
     public void BACKTOMAinMEnu()
     {
-        SceneManager.LoadScene(0); // Reloads current scene
+        // Reset everything as if RestartGame was called
+        ObstacleLogic[] obstacles = FindObjectsOfType<ObstacleLogic>();
+        PlayerController player = FindObjectOfType<PlayerController>();
+
+        foreach (ObstacleLogic obstacle in obstacles)
+        {
+            if (obstacle != null)
+                obstacle.ResetPosition();
+        }
+
+        if (player != null)
+            player.ResetPlayerPosition();
+
+        // Stop the game and hide the gameplay area
+        isPlaying = false;
+        game.SetActive(false);
+
+        // Reset score and speeds so it's ready for next play
+        Score = 0;
+        ObsVelocity = 0.2f;
+        BGVelocity = 0.01f;
+        timer = 0f;
+
+        UpdateScoreText();
+
+        // Hide game over panel
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
+    }
+
+
+    public void PlayGame()
+    {
+        if (game != null)
+            game.SetActive(true);
+        else
+            Debug.LogWarning("Game object is not assigned in the inspector.");
+
+        StartGame();
     }
 }

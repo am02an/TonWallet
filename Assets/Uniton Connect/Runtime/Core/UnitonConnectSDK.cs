@@ -122,16 +122,29 @@ namespace UnitonConnect.Core
 
         private void Awake()
         {
-            CreateInstance();
 
-            if (!_initializeOnAwake)
+            if (_instance == null)
             {
+                Debug.Log("No INstance");
+                _instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Debug.Log("Dupicate INstance");
+                Destroy(gameObject);
                 return;
             }
 
-            Initialize();
+            // Prevent duplicate initialization
+            if (!_isInitialized && _initializeOnAwake)
+            {
+               // CreateInstance();
+                Initialize();
+                _isInitialized = true;
+            }
         }
-
+    
         private void OnDestroy()
         {
             if (IsSupporedPlatform())

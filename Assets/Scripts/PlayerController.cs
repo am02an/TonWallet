@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D body;
     public float forceValue = 20f;
     public float maxVerticalVelocity = 10f; // Adjust this value as needed
-
+    private Vector3 initialPosition;
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("Rigidbody2D component is missing from the bird GameObject.");
         }
+        initialPosition = transform.position;
     }
 
     void Update()
@@ -45,5 +46,10 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Bird collided with an object. Stopping the game.");
         GameManager.isPlaying = false;
+    }
+    public void ResetPlayerPosition()
+    {
+        transform.position = initialPosition;
+        body.velocity = Vector2.zero;
     }
 }

@@ -1,29 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ObstacleLogic : MonoBehaviour
 {
+    private Vector3 initialPosition; // Store starting position
 
-
-    
-    // Start is called before the first frame update
     void Start()
     {
-        transform.position = new Vector3(transform.position.x, Random.Range(-0.7f, -1.9f), 0);
+        // Save the starting position
+        initialPosition = transform.position;
     }
 
-    // Update is called once per frame
+    public void ResetPosition()
+    {
+        // Reset to the initial position exactly
+        transform.position = initialPosition;
+    }
+
     void Update()
     {
-        if(GameManager.isPlaying)
+        if (GameManager.isPlaying)
         {
-            transform.position = transform.position + new Vector3(-GameManager.ObsVelocity * Time.deltaTime, 0, 0);
-            
+            transform.position += new Vector3(-GameManager.ObsVelocity * Time.deltaTime, 0, 0);
+
             if (transform.position.x < -3)
             {
-                transform.position = new Vector3(3, Random.Range(-0.7f, -1.7f) , 0);
+                // Move to the right edge with a new random height
+                transform.position = new Vector3(3, Random.Range(-0.7f, -1.7f), 0);
             }
         }
     }

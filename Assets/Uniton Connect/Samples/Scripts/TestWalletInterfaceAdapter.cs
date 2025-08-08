@@ -30,7 +30,7 @@ namespace UnitonConnect.Core.Demo
         public UnitonConnectSDK UnitonSDK => _unitonSDK;
         public UserAssets.NFT NftStorage => _nftModule;
         public UserAssets.Jetton JettonModule => _jettonModule;
-
+        public GameObject game;
         private void Awake()
         {
             _unitonSDK = UnitonConnectSDK.Instance;
@@ -310,7 +310,7 @@ namespace UnitonConnect.Core.Demo
             _debugMessage.text = errorMessage;
         }
 
-        private void JettonTransactionSended(string masterAddress, 
+        private void JettonTransactionSended(string masterAddress,
             SuccessTransactionData transactionData)
         {
             PrintSuccessTransactionData("JETTON", transactionData);
@@ -335,5 +335,17 @@ namespace UnitonConnect.Core.Demo
             _debugMessage.text = $"Failed to send NFT item" +
                 $" with address: {nftItemAddress}, reason: {errorMessage}";
         }
+        public void Changegame()
+        {
+
+            GameObject _game = GameObject.FindGameObjectWithTag("Game");
+            if (_game != null)
+            {
+
+                _game.SetActive(true);
+            }
+
+        }
     }
+
 }
