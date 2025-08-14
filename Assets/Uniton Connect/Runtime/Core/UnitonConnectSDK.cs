@@ -256,6 +256,21 @@ namespace UnitonConnect.Core
                 UnitonConnectLogger.Log($"Current TON balance: {TonBalance}");
             }));
         }
+        public void LoadBalanceForShow(Action<decimal> onBalanceLoaded)
+        {
+            StartCoroutine(TonApiBridge.GetBalance((nanotonBalance) =>
+            {
+                var tonBalance = UserAssetsUtils.FromNanoton(nanotonBalance);
+
+                TonBalance = tonBalance;
+
+                OnTonBalanceClaimed?.Invoke(TonBalance);
+
+                UnitonConnectLogger.Log($"Current TON balance: {TonBalance}");
+
+                onBalanceLoaded?.Invoke(TonBalance);
+            }));
+        }
 
         /// <summary>
         /// Send toncoin to the specified recipient address
@@ -396,6 +411,7 @@ namespace UnitonConnect.Core
             Wallet = new UserWallet(nonBouceableAddress, walletConfig);
 
             OnWalletConnected?.Invoke(walletConfig);
+            
         }
 
         private void OnConnectFail(string errorMessage)

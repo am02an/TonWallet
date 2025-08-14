@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 {
     [Header("UI References")]
     public TMP_Text scoreText;
+    public TMP_Text finalScore;
     public GameObject gameOverPanel; // Game Over panel reference
 
     [Header("Gameplay Settings")]
@@ -69,7 +70,10 @@ public class GameManager : MonoBehaviour
         else
         {
             if (gameOverPanel != null && !gameOverPanel.activeSelf)
+            {
+                finalScore.text = scoreText.text;
                 gameOverPanel.SetActive(true);
+            }
         }
     }
 
@@ -80,7 +84,10 @@ public class GameManager : MonoBehaviour
         else
             Debug.LogWarning("ScoreText is not assigned in the inspector.");
     }
-
+    public void OpenGameMode()
+    {
+        
+    }
     // Called from Restart button
     public void RestartGame()
     {

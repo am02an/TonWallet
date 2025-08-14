@@ -31,6 +31,10 @@ namespace UnitonConnect.Core.Demo
         public UserAssets.NFT NftStorage => _nftModule;
         public UserAssets.Jetton JettonModule => _jettonModule;
         public GameObject game;
+        public GameObject walletSetting;
+        public GameObject walletPanel;
+        public TextMeshProUGUI walletAddress;
+        public TextMeshProUGUI balanceText;
         private void Awake()
         {
             _unitonSDK = UnitonConnectSDK.Instance;
@@ -95,8 +99,31 @@ namespace UnitonConnect.Core.Demo
                 _sendJettonTransactionButton.interactable = false;
                 _openNftCollectionButton.interactable = false;
             }
+            else
+            {
+                SetWalletSetting();
+            }
         }
+        public void SetWalletSetting()
+        {
+            if (_unitonSDK.IsWalletConnected)
+            {
 
+                walletPanel.SetActive(false);
+                walletSetting.gameObject.SetActive(true);
+                _unitonSDK.LoadBalanceForShow((balance) =>
+                {
+                    Debug.Log("Balance received: " + balance);
+                    balanceText.text = $"{balance} TON";
+
+                });
+            }
+            else
+            {
+                walletPanel.SetActive(true);
+
+            }
+        }
         private void PrintSuccessTransactionData(string transactionName,
             SuccessTransactionData transaction)
         {
@@ -221,6 +248,7 @@ namespace UnitonConnect.Core.Demo
                 _sendTransactionButton.interactable = true;
                 _sendJettonTransactionButton.interactable = true;
                 _openNftCollectionButton.interactable = true;
+                SetWalletSetting();
             }
         }
 
