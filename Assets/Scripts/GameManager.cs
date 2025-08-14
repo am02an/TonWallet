@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement; // Needed for scene changes
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -34,6 +35,8 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        // From any script:
+
         isPlaying = true;
         Debug.Log(isPlaying);
         Score = 0;
@@ -130,8 +133,16 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void PlayGame()
+    public void PlayGameButtonClick()
     {
+        StartCoroutine(PlayGame());
+    }
+
+    private IEnumerator PlayGame()
+    {
+        // Show loading and wait until it’s done
+        yield return LoadingScreen.ShowLoadingAndWait();
+
         if (game != null)
             game.SetActive(true);
         else
@@ -139,4 +150,5 @@ public class GameManager : MonoBehaviour
 
         StartGame();
     }
+
 }
