@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -35,6 +35,7 @@ namespace UnitonConnect.Core.Demo
         public GameObject walletPanel;
         public TextMeshProUGUI walletAddress;
         public TextMeshProUGUI balanceText;
+        private bool isWalletSettingOpen=false;
         private void Awake()
         {
             _unitonSDK = UnitonConnectSDK.Instance;
@@ -99,29 +100,29 @@ namespace UnitonConnect.Core.Demo
                 _sendJettonTransactionButton.interactable = false;
                 _openNftCollectionButton.interactable = false;
             }
-            else
-            {
-                SetWalletSetting();
-            }
+            
         }
         public void SetWalletSetting()
         {
-            if (_unitonSDK.IsWalletConnected)
+            if (walletPanel.activeInHierarchy)
             {
-
-                walletPanel.SetActive(false);
-                walletSetting.gameObject.SetActive(true);
-                _unitonSDK.LoadBalanceForShow((balance) =>
+                if (_unitonSDK.IsWalletConnected)
                 {
-                    Debug.Log("Balance received: " + balance);
-                    balanceText.text = $"{balance} TON";
 
-                });
-            }
-            else
-            {
-                walletPanel.SetActive(true);
+                    walletPanel.SetActive(false);
+                    walletSetting.gameObject.SetActive(true);
+                    _unitonSDK.LoadBalanceForShow((balance) =>
+                    {
+                        Debug.Log("Balance received: " + balance);
+                        balanceText.text = $"{balance} TON";
 
+                    });
+                }
+                else
+                {
+                    walletPanel.SetActive(true);
+
+                }
             }
         }
         private void PrintSuccessTransactionData(string transactionName,
