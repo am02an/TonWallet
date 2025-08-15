@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Bird collided with an object. Stopping the game.");
         GameManager.isPlaying = false;
+        GameManager.Instance.SubmitFinalScoreToLeaderboard();
     }
     public void ResetPlayerPosition()
     {

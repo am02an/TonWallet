@@ -1,56 +1,82 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement; // Needed for scene changes
 using System.Collections;
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
+
+public enum GameMode
+{
+    Free,
+    Easy,
+    Medium,
+    Hard
+}
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+
     [Header("UI References")]
     public TMP_Text scoreText;
     public TMP_Text finalScore;
-    public GameObject gameOverPanel; // Game Over panel reference
+    public GameObject gameOverPanel;
+    public TextMeshProUGUI UserName;
 
     [Header("Gameplay Settings")]
     public GameObject game;
 
-    // Static gameplay variables
-    public static bool isPlaying = true;
+    // Gameplay variables
+    public static bool isPlaying = false;
     public static float ObsVelocity = 0.2f;
     public static float BGVelocity = 0.01f;
-    public static int Score = 0;
-    public TextMeshProUGUI UserName;
+    public  int Score = 0;
     public string TelegramUsername;
     private float timer = 0f;
+    public static GameMode CurrentMode = GameMode.Free;
+    private string _currentMode;
+    private readonly Dictionary<GameMode, (float obsSpeed, float bgSpeed)> modeSettings =
+        new Dictionary<GameMode, (float, float)>
+        {
+            { GameMode.Free,   (0.2f, 0.01f) },
+            { GameMode.Easy,   (0.3f, 0.015f) },
+            { GameMode.Medium, (0.4f, 0.02f) },
+            { GameMode.Hard,   (0.5f, 0.025f) }
+        };
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
-        // Optional: Start game automatically or wait for Play button
         GetUsername();
-        if (game != null)
-            game.SetActive(false);
 
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(false);
+        if (game != null) game.SetActive(false);
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
 
         UpdateScoreText();
     }
 
-    public void StartGame()
+    public void StartGame(GameMode mode)
     {
-        // From any script:
+        CurrentMode = mode;
         isPlaying = true;
-        Debug.Log(isPlaying);
         Score = 0;
-        ObsVelocity = 0.2f;
-        BGVelocity = 0.01f;
         timer = 0f;
+
+        // Set speeds based on mode
+        if (modeSettings.TryGetValue(mode, out var settings))
+        {
+            ObsVelocity = settings.obsSpeed;
+            BGVelocity = settings.bgSpeed;
+        }
 
         UpdateScoreText();
 
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
+
+        Debug.Log($"Game started in {mode} mode.");
     }
 
     private void Update()
@@ -69,21 +95,11 @@ public class GameManager : MonoBehaviour
             ObsVelocity += 0.008f * Time.deltaTime;
             BGVelocity += 0.0005f * Time.deltaTime;
         }
-        else
+        else if (gameOverPanel != null && !gameOverPanel.activeSelf)
         {
-            if (gameOverPanel != null && !gameOverPanel.activeSelf)
-            {
-                finalScore.text = scoreText.text;
-                gameOverPanel.SetActive(true);
-            }
+            finalScore.text = scoreText != null ? scoreText.text : "0";
+            gameOverPanel.SetActive(true);
         }
-    }
-    public void GetUsername()
-    {
-        TelegramBridge bridge = new TelegramBridge();
-        string username = bridge.GetUsername();
-        SetTelegramUsername(username);
-        Debug.Log("Telegram username: " + username);
     }
 
     private void UpdateScoreText()
@@ -93,84 +109,104 @@ public class GameManager : MonoBehaviour
         else
             Debug.LogWarning("ScoreText is not assigned in the inspector.");
     }
-  
-    public void OnTelegramUsernameReceived(string username)
-    {
-        Debug.Log("Telegram Username from HTML callback: " + username);
-    }
-    // Called from Restart button
-    public void RestartGame()
-    {
-        // Find all obstacles in the scene
-        ObstacleLogic[] obstacles = FindObjectsOfType<ObstacleLogic>();
-        PlayerController player = FindObjectOfType<PlayerController>();
-        // Reset each obstacle's position
-        foreach (ObstacleLogic obstacle in obstacles)
-        {
-            if (obstacle != null)
-                obstacle.ResetPosition();
-        }
-        player.ResetPlayerPosition();
 
-        // Restart the gameplay state
-        StartGame();
+    public void GetUsername()
+    {
+        TelegramBridge bridge = new TelegramBridge();
+        string username = bridge.GetUsername();
+        SetTelegramUsername(username);
+        Debug.Log("Telegram username: " + username);
     }
+
     public void SetTelegramUsername(string username)
     {
         TelegramUsername = username;
-        UserName.text = TelegramUsername;
+        if (UserName != null)
+            UserName.text = TelegramUsername;
         Debug.Log("Telegram Username: " + username);
+    }
+
+    public void SubmitFinalScoreToLeaderboard()
+    {
+        string leaderboardName = CurrentMode switch
+        {
+            GameMode.Free => "Leaderboard_Free",
+            GameMode.Easy => "Leaderboard_Easy",
+            GameMode.Medium => "Leaderboard_Medium",
+            GameMode.Hard => "Leaderboard_Hard",
+            _ => "Leaderboard_Free"
+        };
+
+        if (PlayFabManager.Instance != null)
+            PlayFabManager.Instance.SubmitScore(leaderboardName, Score);
+        else
+            Debug.LogError("PlayFabManager instance not found!");
+    }
+
+    public void RestartGame()
+    {
+        ResetGameEntities();
+        StartGame(CurrentMode);
     }
 
     public void BACKTOMAinMEnu()
     {
-        // Reset everything as if RestartGame was called
-        ObstacleLogic[] obstacles = FindObjectsOfType<ObstacleLogic>();
-        PlayerController player = FindObjectOfType<PlayerController>();
+        ResetGameEntities();
+        isPlaying = false;
 
-        foreach (ObstacleLogic obstacle in obstacles)
+        if (game != null) game.SetActive(false);
+
+        Score = 0;
+        ObsVelocity = 0.2f;
+        BGVelocity = 0.01f;
+        timer = 0f;
+        UpdateScoreText();
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
+    }
+
+    private void ResetGameEntities()
+    {
+        foreach (ObstacleLogic obstacle in FindObjectsOfType<ObstacleLogic>())
         {
             if (obstacle != null)
                 obstacle.ResetPosition();
         }
 
+        PlayerController player = FindObjectOfType<PlayerController>();
         if (player != null)
             player.ResetPlayerPosition();
-
-        // Stop the game and hide the gameplay area
-        isPlaying = false;
-        game.SetActive(false);
-
-        // Reset score and speeds so it's ready for next play
-        Score = 0;
-        ObsVelocity = 0.2f;
-        BGVelocity = 0.01f;
-        timer = 0f;
-
-        UpdateScoreText();
-
-        // Hide game over panel
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(false);
     }
 
-
-    public void PlayGameButtonClick()
+    public void PlayGameButtonClick(string gameMode)
     {
-        StartCoroutine(PlayGame());
+        StartCoroutine(PlayGame(gameMode));
     }
 
-    private IEnumerator PlayGame()
+    private IEnumerator PlayGame(string gameMode)
     {
-        // Show loading and wait until it’s done
-        yield return LoadingScreen.ShowLoadingAndWait();
+        SetCurrentMode(gameMode);
+         yield return LoadingScreen.ShowLoadingAndWait();
 
         if (game != null)
             game.SetActive(true);
         else
             Debug.LogWarning("Game object is not assigned in the inspector.");
 
-        StartGame();
+        StartGame(CurrentMode);
+    }
+    public void SetCurrentMode(string mode)
+    {
+        if (System.Enum.TryParse(mode, true, out GameMode parsedMode))
+        {
+            CurrentMode = parsedMode;
+            Debug.Log("Current mode set to: " + CurrentMode);
+        }
+        else
+        {
+            Debug.LogWarning("Invalid mode! Use Free, Easy, Medium, or Hard.");
+        }
     }
 
 }
