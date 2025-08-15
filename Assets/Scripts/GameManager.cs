@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement; // Needed for scene changes
 using System.Collections;
+using System.Runtime.InteropServices;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,12 +20,14 @@ public class GameManager : MonoBehaviour
     public static float ObsVelocity = 0.2f;
     public static float BGVelocity = 0.01f;
     public static int Score = 0;
-
+    public TextMeshProUGUI UserName;
+    public string TelegramUsername;
     private float timer = 0f;
 
     private void Start()
     {
         // Optional: Start game automatically or wait for Play button
+        GetUsername();
         if (game != null)
             game.SetActive(false);
 
@@ -37,7 +40,6 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         // From any script:
-
         isPlaying = true;
         Debug.Log(isPlaying);
         Score = 0;
@@ -76,6 +78,13 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    public void GetUsername()
+    {
+        TelegramBridge bridge = new TelegramBridge();
+        string username = bridge.GetUsername();
+        SetTelegramUsername(username);
+        Debug.Log("Telegram username: " + username);
+    }
 
     private void UpdateScoreText()
     {
@@ -84,9 +93,10 @@ public class GameManager : MonoBehaviour
         else
             Debug.LogWarning("ScoreText is not assigned in the inspector.");
     }
-    public void OpenGameMode()
+  
+    public void OnTelegramUsernameReceived(string username)
     {
-        
+        Debug.Log("Telegram Username from HTML callback: " + username);
     }
     // Called from Restart button
     public void RestartGame()
@@ -105,7 +115,12 @@ public class GameManager : MonoBehaviour
         // Restart the gameplay state
         StartGame();
     }
-
+    public void SetTelegramUsername(string username)
+    {
+        TelegramUsername = username;
+        UserName.text = TelegramUsername;
+        Debug.Log("Telegram Username: " + username);
+    }
 
     public void BACKTOMAinMEnu()
     {

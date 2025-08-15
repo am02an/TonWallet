@@ -35,9 +35,8 @@ namespace UnitonConnect.Core.Demo
         public GameObject walletPanel;
         public TextMeshProUGUI walletAddress;
         public TextMeshProUGUI balanceText;
-        public TextMeshProUGUI UserName;
+      
         private bool isWalletSettingOpen=false;
-        public string TelegramUsername;
         private void Awake()
         {
             _unitonSDK = UnitonConnectSDK.Instance;
@@ -104,12 +103,7 @@ namespace UnitonConnect.Core.Demo
             }
             
         }
-        public void SetTelegramUsername(string username)
-        {
-            TelegramUsername = username;
-            UserName.text = TelegramUsername;
-            Debug.Log("Telegram Username: " + username);
-        }
+     
         public void SetWalletSetting()
         {
             if (walletPanel.activeInHierarchy)
