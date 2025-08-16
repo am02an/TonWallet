@@ -1246,7 +1246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3abcf032d70077d418ea364b40daec28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  titleId: 1BEF81
+  titleId: CECAC
   alwaysCreateNewLogin: 1
 --- !u!4 &118242153
 Transform:
@@ -4106,7 +4106,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 2040704908}
+  m_TargetGraphic: {fileID: 313035895}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -14258,9 +14258,9 @@ RectTransform:
   - {fileID: 1776280272}
   m_Father: {fileID: 1803111122}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 481.28, y: -225}
   m_SizeDelta: {x: 250, y: 360}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1214395529
@@ -16533,9 +16533,9 @@ RectTransform:
   - {fileID: 1267075084}
   m_Father: {fileID: 1803111122}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 176, y: -225}
   m_SizeDelta: {x: 250, y: 360}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1443925912

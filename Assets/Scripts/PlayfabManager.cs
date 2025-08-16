@@ -36,12 +36,14 @@ public class PlayFabManager : MonoBehaviour
         }
 
         PlayFabSettings.staticSettings.TitleId = titleId;
-        LoginNewAccount();
+        //LoginNewAccount();
     }
 
-    public void LoginNewAccount()
+    public void LoginNewAccount(string username)
     {
+        // Generate unique ID for this player (used for login)
         CurrentCustomId = Guid.NewGuid().ToString("N");
+
         var request = new LoginWithCustomIDRequest
         {
             TitleId = titleId,
@@ -49,9 +51,28 @@ public class PlayFabManager : MonoBehaviour
             CreateAccount = true
         };
 
-        PlayFabClientAPI.LoginWithCustomID(request, OnLoginSuccess, OnPlayFabError);
+        PlayFabClientAPI.LoginWithCustomID(request, result =>
+        {
+            Debug.Log("Login Successful!");
+
+            // After login, set the username
+            UpdateDisplayName(username);
+
+        }, OnPlayFabError);
     }
 
+    private void UpdateDisplayName(string username)
+    {
+        var request = new UpdateUserTitleDisplayNameRequest
+        {
+            DisplayName = username
+        };
+
+        PlayFabClientAPI.UpdateUserTitleDisplayName(request, result =>
+        {
+            Debug.Log("Username set to: " + result.DisplayName);
+        }, OnPlayFabError);
+    }
     private void OnLoginSuccess(LoginResult result)
     {
         CurrentPlayFabId = result.PlayFabId;

@@ -121,6 +121,7 @@ public class GameManager : MonoBehaviour
         TelegramBridge bridge = new TelegramBridge();
         string username = bridge.GetUsername();
         SetTelegramUsername(username);
+        PlayFabManager.Instance.LoginNewAccount(username);
         Debug.Log("Telegram username: " + username);
     }
 
