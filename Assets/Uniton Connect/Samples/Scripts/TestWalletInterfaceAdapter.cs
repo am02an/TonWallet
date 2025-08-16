@@ -116,7 +116,7 @@ namespace UnitonConnect.Core.Demo
                     _unitonSDK.LoadBalanceForShow((balance) =>
                     {
                         Debug.Log("Balance received: " + balance);
-                        balanceText.text = $"{balance} TON";
+                        balanceText.text = $"{balance}";
 
                     });
                 }

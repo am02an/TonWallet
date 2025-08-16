@@ -79,20 +79,23 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Game started in {mode} mode.");
     }
 
+    private float nextTime = 0f;
+
     private void Update()
     {
         if (isPlaying)
         {
-            timer += Time.deltaTime;
-
-            if (timer >= 1f)
+            if (isPlaying)
             {
-
-                Score++;
-                Debug.Log(Score);
-                UpdateScoreText();
-                timer = 0f;
+                timer += Time.deltaTime;
+                if (timer >= 1f)
+                {
+                    Score++;
+                    UpdateScoreText();
+                    timer -= 1f;
+                }
             }
+
 
             ObsVelocity += 0.008f * Time.deltaTime;
             BGVelocity += 0.0005f * Time.deltaTime;
@@ -103,6 +106,7 @@ public class GameManager : MonoBehaviour
             gameOverPanel.SetActive(true);
         }
     }
+
 
     private void UpdateScoreText()
     {

@@ -18,12 +18,14 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.isPlaying && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)))
+        if (!GameManager.isPlaying)
+        { return; }
+        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)))
         {
-            // Apply force only if the bird is moving downwards (prevents excessive jumping when holding the mouse button)
+            // Only reset vertical velocity, not the whole game state/timer
             if (body.velocity.y <= 0)
             {
-                body.velocity = Vector2.zero;  // Reset the velocity to have consistent force application
+                body.velocity = new Vector2(body.velocity.x, 0);
                 body.AddForce(Vector2.up * forceValue, ForceMode2D.Impulse);
             }
         }
@@ -34,13 +36,14 @@ public class PlayerController : MonoBehaviour
             body.velocity = new Vector2(body.velocity.x, maxVerticalVelocity);
         }
 
-        // Ensure y-position check logic is correct (both should be the same comparison)
+        // Out of bounds = game over
         if (transform.position.y > 1.15f || transform.position.y < -1.15f)
         {
             Debug.Log("Bird out of bounds. Stopping the game.");
             GameManager.isPlaying = false;
         }
     }
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
