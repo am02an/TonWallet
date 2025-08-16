@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     public static float BGVelocity = 0.01f;
     public  int Score = 0;
     public string TelegramUsername;
-    private float timer = 0f;
+    public float timer = 0f;
     public static GameMode CurrentMode = GameMode.Free;
     private string _currentMode;
     private readonly Dictionary<GameMode, (float obsSpeed, float bgSpeed)> modeSettings =
@@ -87,7 +87,9 @@ public class GameManager : MonoBehaviour
 
             if (timer >= 1f)
             {
+
                 Score++;
+                Debug.Log(Score);
                 UpdateScoreText();
                 timer = 0f;
             }
