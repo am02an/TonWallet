@@ -54,7 +54,7 @@ public class PlayFabManager : MonoBehaviour
         PlayFabClientAPI.LoginWithCustomID(request, result =>
         {
             Debug.Log("Login Successful!");
-
+            CreateAllLeaderboards();
             // After login, set the username
             UpdateDisplayName(username);
 
@@ -68,15 +68,31 @@ public class PlayFabManager : MonoBehaviour
             DisplayName = username
         };
 
-        PlayFabClientAPI.UpdateUserTitleDisplayName(request, result =>
-        {
-            Debug.Log("Username set to: " + result.DisplayName);
-        }, OnPlayFabError);
+        PlayFabClientAPI.UpdateUserTitleDisplayName(request,
+            result =>
+            {
+                Debug.Log("✅ Username set to: " + result.DisplayName);
+            },
+            error =>
+            {
+                if (error.Error == PlayFabErrorCode.NameNotAvailable)
+                {
+                // Add random number to make it unique
+                string newName = username + "_" + UnityEngine.Random.Range(1000, 9999);
+        IsLoggedIn = true;
+                    Debug.LogWarning($"⚠️ Name not available. Trying new name: {newName}");
+                    UpdateDisplayName(newName); // retry
+            }
+                else
+                {
+                    OnPlayFabError(error);
+                }
+            });
     }
+
     private void OnLoginSuccess(LoginResult result)
     {
         CurrentPlayFabId = result.PlayFabId;
-        IsLoggedIn = true;
         Debug.Log($"Logged in. PlayFabId: {CurrentPlayFabId}");
     }
 
@@ -138,7 +154,32 @@ public class PlayFabManager : MonoBehaviour
     /// <summary>
     /// Fetch top N entries from a leaderboard.
     /// </summary>
-    public void GetTopLeaderboard(string leaderboardName, int maxResults, Action<List<PlayerLeaderboardEntry>> onDone)
+    /// public 
+    public void CreateAllLeaderboards()
+    {
+        var request = new UpdatePlayerStatisticsRequest
+        {
+            Statistics = new List<StatisticUpdate>
+            {
+                new StatisticUpdate { StatisticName = "Leaderboard_Free", Value = 0 },
+                new StatisticUpdate { StatisticName = "Leaderboard_Easy", Value = 0 },
+                new StatisticUpdate { StatisticName = "Leaderboard_Medium", Value = 0 },
+                new StatisticUpdate { StatisticName = "Leaderboard_Hard", Value = 0 },
+                new StatisticUpdate { StatisticName = "Leaderboard_Compete", Value = 0 }
+            }
+        };
+
+        PlayFabClientAPI.UpdatePlayerStatistics(request,
+            result => Debug.Log("✅ All leaderboards created (Free, Easy, Medium, Hard)"),
+            error => Debug.LogError("❌ Error creating leaderboards: " + error.GenerateErrorReport()));
+    }
+    public void GetLeaderboardShow(string leaderBoardName)
+    {
+        // Pass callback to handle leaderboard results
+        GetTopLeaderboard(leaderBoardName, 10, OnLeaderboardReceived);
+    }
+
+    private void GetTopLeaderboard(string leaderboardName, int maxResults, Action<List<PlayerLeaderboardEntry>> onDone)
     {
         var request = new GetLeaderboardRequest
         {
@@ -150,5 +191,14 @@ public class PlayFabManager : MonoBehaviour
         PlayFabClientAPI.GetLeaderboard(request,
             r => onDone?.Invoke(r.Leaderboard),
             OnPlayFabError);
+    }
+
+    private void OnLeaderboardReceived(List<PlayerLeaderboardEntry> leaderboard)
+    {
+        Debug.Log("Leaderboard received! Count: " + leaderboard.Count);
+        foreach (var entry in leaderboard)
+        {
+            Debug.Log($"{entry.Position + 1}. {entry.DisplayName} - {entry.StatValue}");
+        }
     }
 }
