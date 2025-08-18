@@ -1890,7 +1890,7 @@ GameObject:
   - component: {fileID: 118242153}
   - component: {fileID: 118242152}
   m_Layer: 0
-  m_Name: PLayFabManager
+  m_Name: PlayFabManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2752,7 +2752,32 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 163628028}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 79121434}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 515026109}
+        m_TargetAssemblyTypeName: UnitonConnect.Core.Demo.TestWalletInterfaceAdapter,
+          Assembly-CSharp
+        m_MethodName: OpenWalletPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &163628028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7591,7 +7616,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 12.5
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 81de693988e0833408a5d8f5b643a826, type: 2}
   m_sharedMaterial: {fileID: -3694055200800684055, guid: 81de693988e0833408a5d8f5b643a826, type: 2}
@@ -8572,6 +8597,9 @@ MonoBehaviour:
   walletPanel: {fileID: 1206050149}
   walletAddress: {fileID: 305575373}
   balanceText: {fileID: 831453642}
+  profileName: {fileID: 923614867}
+  walletaddressProfile: {fileID: 27245987}
+  walletBalanceProfile: {fileID: 0}
 --- !u!1 &517745557
 GameObject:
   m_ObjectHideFlags: 0
@@ -24804,6 +24832,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 515026109}
+        m_TargetAssemblyTypeName: UnitonConnect.Core.Demo.TestWalletInterfaceAdapter,
+          Assembly-CSharp
+        m_MethodName: SetProfile
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!1 &1509619063
 GameObject:
   m_ObjectHideFlags: 0
@@ -26764,7 +26805,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1568742349}
   m_OnClick:
     m_PersistentCalls:
@@ -37065,7 +37106,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 12.5
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 81de693988e0833408a5d8f5b643a826, type: 2}
   m_sharedMaterial: {fileID: -3694055200800684055, guid: 81de693988e0833408a5d8f5b643a826, type: 2}

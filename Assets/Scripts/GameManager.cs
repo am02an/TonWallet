@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public string walletAddress;
+    public float walletBalance;
     [Header("UI References")]
     public TMP_Text scoreText;
     public TMP_Text finalScore;

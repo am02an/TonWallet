@@ -35,6 +35,11 @@ namespace UnitonConnect.Core.Demo
         public GameObject walletPanel;
         public TextMeshProUGUI walletAddress;
         public TextMeshProUGUI balanceText;
+
+        [Header("Profile")]
+        public TextMeshProUGUI profileName;
+        public TextMeshProUGUI walletaddressProfile;
+        public TextMeshProUGUI walletBalanceProfile;
       
         private bool isWalletSettingOpen=false;
         private void Awake()
@@ -117,6 +122,7 @@ namespace UnitonConnect.Core.Demo
                     {
                         Debug.Log("Balance received: " + balance);
                         balanceText.text = $"{balance}";
+                        GameManager.Instance.walletBalance = (float)balance; 
 
                     });
                 }
@@ -126,6 +132,22 @@ namespace UnitonConnect.Core.Demo
 
                 }
             }
+        }
+        public void OpenWalletPanel()
+        {
+            if(_unitonSDK.IsWalletConnected)
+            {
+                walletSetting.SetActive(true);
+            }
+            else
+            {
+                walletPanel.SetActive(true);
+            }
+        }
+        public void SetProfile()
+        {
+            profileName.text = GameManager.Instance.TelegramUsername;
+            walletaddressProfile.text = GameManager.Instance.walletAddress;
         }
         private void PrintSuccessTransactionData(string transactionName,
             SuccessTransactionData transaction)
@@ -239,7 +261,7 @@ namespace UnitonConnect.Core.Demo
 
                 _debugMessage.text = successConnectMessage;
                 _shortWalletAddress.text = shortWalletAddress;
-
+                GameManager.Instance.walletAddress = shortWalletAddress;
                 Debug.Log($"Connected wallet short address: {shortWalletAddress}");
 
                 Debug.Log($"Connected address is user friendly: {_unitonSDK.Wallet.IsUserFriendly}");
