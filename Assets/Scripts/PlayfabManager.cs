@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
+using TMPro;
+using UnityEngine.UI;
 
 public class PlayFabManager : MonoBehaviour
 {
@@ -15,7 +17,14 @@ public class PlayFabManager : MonoBehaviour
     public string CurrentCustomId { get; private set; }
     public string CurrentPlayFabId { get; private set; }
     public bool IsLoggedIn { get; private set; }
-
+    [Header("UI Free Leaderboard References")]
+    public Transform leaderboardContainer;          // Parent where entries will be spawned
+    public GameObject leaderboardEntryPrefab;       // Prefab for each row
+    public Sprite defaultAvatar;                    // Fallback image if no avatar set
+    public GameObject top1;
+    public GameObject top2;
+    public GameObject top3;
+    private List<GameObject> spawnedEntries = new List<GameObject>();
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -41,8 +50,16 @@ public class PlayFabManager : MonoBehaviour
 
     public void LoginNewAccount(string username)
     {
-        // Generate unique ID for this player (used for login)
-        CurrentCustomId = Guid.NewGuid().ToString("N");
+        // Check if we already saved a CustomId
+        if (PlayerPrefs.HasKey("CustomId"))
+        {
+            CurrentCustomId = PlayerPrefs.GetString("CustomId");
+        }
+        else
+        {
+            CurrentCustomId = Guid.NewGuid().ToString("N");
+            PlayerPrefs.SetString("CustomId", CurrentCustomId);
+        }
 
         var request = new LoginWithCustomIDRequest
         {
@@ -53,13 +70,24 @@ public class PlayFabManager : MonoBehaviour
 
         PlayFabClientAPI.LoginWithCustomID(request, result =>
         {
-            Debug.Log("Login Successful!");
-            CreateAllLeaderboards();
-            // After login, set the username
-            UpdateDisplayName(username);
+            Debug.Log("✅ Login Successful! ID: " + CurrentCustomId);
+
+                IsLoggedIn = true;
+            // Check if this is a NEW account
+            if (result.NewlyCreated)
+            {
+                Debug.Log("🎉 New account created, setting display name...");
+                UpdateDisplayName(username);
+            }
+            else
+            {
+                Debug.Log("🔑 Existing account, skipping display name update.");
+            }
 
         }, OnPlayFabError);
     }
+
+
 
     private void UpdateDisplayName(string username)
     {
@@ -143,11 +171,22 @@ public class PlayFabManager : MonoBehaviour
             };
 
             PlayFabClientAPI.UpdatePlayerStatistics(updateRequest,
-                _ => Debug.Log($"Updated '{leaderboardName}' from {currentScore} to {newScore}"),
+                _ =>
+                {
+                // ✅ Fetch DisplayName
+                var accountInfoRequest = new GetAccountInfoRequest();
+                    PlayFabClientAPI.GetAccountInfo(accountInfoRequest, accountResult =>
+                    {
+                        string displayName = accountResult.AccountInfo.TitleInfo.DisplayName ?? "NoName";
+                        Debug.Log($"✅ {displayName} updated '{leaderboardName}' from {currentScore} → {newScore}");
+                    },
+                    OnPlayFabError);
+                },
                 OnPlayFabError);
 
         }, OnPlayFabError);
     }
+
 
 
 
@@ -193,12 +232,74 @@ public class PlayFabManager : MonoBehaviour
             OnPlayFabError);
     }
 
-    private void OnLeaderboardReceived(List<PlayerLeaderboardEntry> leaderboard)
+    public void OnLeaderboardReceived(List<PlayerLeaderboardEntry> leaderboard)
     {
         Debug.Log("Leaderboard received! Count: " + leaderboard.Count);
+
+        // Clear old entries
+        foreach (var entry in spawnedEntries)
+            Destroy(entry);
+        spawnedEntries.Clear();
+
+        // Create new entries in sequence
         foreach (var entry in leaderboard)
         {
-            Debug.Log($"{entry.Position + 1}. {entry.DisplayName} - {entry.StatValue}");
+            GameObject go;
+            bool showRank = true;
+
+            // Top 3 → use special slots
+            if (entry.Position == 0 && top1 != null)
+            {
+                go = top1;
+                showRank = false; // no rank text for top 3
+            }
+            else if (entry.Position == 1 && top2 != null)
+            {
+                go = top2;
+                showRank = false;
+            }
+            else if (entry.Position == 2 && top3 != null)
+            {
+                go = top3;
+                showRank = false;
+            }
+            else
+            {
+                // 4 onwards → instantiate prefab
+                go = Instantiate(leaderboardEntryPrefab, leaderboardContainer);
+                spawnedEntries.Add(go);
+            }
+
+            // Get refs from prefab/slot
+            var rank = go.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            var name = go.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            var score = go.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+
+            // Rank logic
+            if (showRank)
+            {
+
+                var avatar = go.transform.GetChild(3).GetComponent<Image>();
+                rank.text = (entry.Position + 1).ToString();
+            if (defaultAvatar != null)
+                avatar.sprite = defaultAvatar;
+            }
+             // hide text for top 3
+
+            // Assign values
+            name.text = entry.DisplayName ?? "Guest";
+            score.text = entry.StatValue.ToString();
+
+        }
+
+
+    }
+    public void ClearContainer(Transform container)
+    {
+        for (int i = container.childCount - 1; i >= 0; i--)
+        {
+            Destroy(container.GetChild(i).gameObject);
         }
     }
+
 }
