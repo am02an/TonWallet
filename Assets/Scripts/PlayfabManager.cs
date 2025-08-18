@@ -235,11 +235,11 @@ public class PlayFabManager : MonoBehaviour
     public void OnLeaderboardReceived(List<PlayerLeaderboardEntry> leaderboard)
     {
         Debug.Log("Leaderboard received! Count: " + leaderboard.Count);
-
+        ClearContainer(leaderboardContainer);
         // Clear old entries
         foreach (var entry in spawnedEntries)
             Destroy(entry);
-        spawnedEntries.Clear();
+       // spawnedEntries.Clear();
 
         // Create new entries in sequence
         foreach (var entry in leaderboard)
@@ -267,7 +267,6 @@ public class PlayFabManager : MonoBehaviour
             {
                 // 4 onwards → instantiate prefab
                 go = Instantiate(leaderboardEntryPrefab, leaderboardContainer);
-                spawnedEntries.Add(go);
             }
 
             // Get refs from prefab/slot
