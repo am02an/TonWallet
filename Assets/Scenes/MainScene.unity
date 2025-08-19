@@ -484,7 +484,7 @@ GameObject:
   - component: {fileID: 24712327}
   - component: {fileID: 24712326}
   m_Layer: 5
-  m_Name: Setting (1)
+  m_Name: Yoruprofile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -582,8 +582,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 49.100006, y: 0}
-  m_SizeDelta: {x: -98.3, y: 0}
+  m_AnchoredPosition: {x: 36, y: 2}
+  m_SizeDelta: {x: -124.4, y: -50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &27245987
 MonoBehaviour:
@@ -605,7 +605,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 09jdiknmsnflls
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: af3124136f4c30c489efb0a3ee1a4333, type: 2}
   m_sharedMaterial: {fileID: 7815568239484203946, guid: af3124136f4c30c489efb0a3ee1a4333, type: 2}
@@ -632,8 +632,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 45
-  m_fontSizeBase: 45
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -642,7 +642,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 5
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1427,7 +1427,7 @@ RectTransform:
   m_GameObject: {fileID: 79121434}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1600015245}
@@ -19939,8 +19939,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 50, y: 0}
-  m_SizeDelta: {x: 60, y: 60}
+  m_AnchoredPosition: {x: 53, y: 2}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1141306353
 MonoBehaviour:
@@ -21193,8 +21193,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -4.0750046, y: 214}
-  m_SizeDelta: {x: 519.25, y: 100}
+  m_AnchoredPosition: {x: 0.0000076293945, y: 210.20001}
+  m_SizeDelta: {x: 550, y: 110}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1217946168
 MonoBehaviour:
@@ -21216,7 +21216,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 81f31ea3f5751ed488c943b1acf17783, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4790d60263c1ba341b7e37daa8882302, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
