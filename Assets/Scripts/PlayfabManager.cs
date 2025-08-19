@@ -266,7 +266,46 @@ public class PlayFabManager : MonoBehaviour
         // Clear container
         ClearContainer(targetContainer);
 
-        // Create new entries
+        // ✅ If no entries, add placeholder
+        if (leaderboard.Count == 0)
+        {
+            GameObject go1 = top1Ref;
+            GameObject go2 = top2Ref;
+            GameObject go3 = top3Ref;
+
+            // --- Top 1 ---
+            var name1 = go1.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            var score1 = go1.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+            var avatar1 = go1.transform.GetChild(3).GetComponent<Image>();
+
+            name1.text = "-------";
+            score1.text = "0";
+          //  if (defaultAvatar != null) avatar1.sprite = defaultAvatar;
+
+            // --- Top 2 ---
+            var name2 = go2.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            var score2 = go2.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+            var avatar2 = go2.transform.GetChild(3).GetComponent<Image>();
+
+            name2.text = "-------";
+            score2.text = "0";
+           // if (defaultAvatar != null) avatar2.sprite = defaultAvatar;
+
+            // --- Top 3 ---
+            var name3 = go3.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            var score3 = go3.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+            var avatar3 = go3.transform.GetChild(3).GetComponent<Image>();
+
+            name3.text = "-------";
+            score3.text = "0";
+           // if (defaultAvatar != null) avatar3.sprite = defaultAvatar;
+
+            Debug.Log($"[{leaderboardName}] Empty → Showing placeholder rows for Top 3.");
+            return; // stop here
+        }
+
+
+        // ✅ Otherwise, build normally
         foreach (var entry in leaderboard)
         {
             GameObject go;
@@ -318,7 +357,6 @@ public class PlayFabManager : MonoBehaviour
             score.text = entry.StatValue.ToString();
         }
     }
-
 
     public void ClearContainer(Transform container)
     {
