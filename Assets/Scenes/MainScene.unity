@@ -2663,11 +2663,15 @@ MonoBehaviour:
   titleId: CECAC
   alwaysCreateNewLogin: 1
   leaderboardContainer: {fileID: 1944069972}
+  leaderboardContainerCompete: {fileID: 1292817107}
   leaderboardEntryPrefab: {fileID: 614461974619005644, guid: 713b05c586ab000498e58b4a050b50ae, type: 3}
   defaultAvatar: {fileID: 21300000, guid: b046a46b3e59af541b9b3454b5460680, type: 3}
-  top1: {fileID: 93009126}
-  top2: {fileID: 206703930}
-  top3: {fileID: 920055609}
+  top1Free: {fileID: 93009126}
+  top2Free: {fileID: 206703930}
+  top3Free: {fileID: 920055609}
+  top1Compete: {fileID: 1195073889}
+  top2Compete: {fileID: 2093064431}
+  top3Compete: {fileID: 828644919}
 --- !u!4 &118242153
 Transform:
   m_ObjectHideFlags: 0
@@ -9419,6 +9423,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 118242152}
+        m_TargetAssemblyTypeName: PlayFabManager, Assembly-CSharp
+        m_MethodName: GetLeaderboardShow
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Leaderboard_Easy
           m_BoolArgument: 1
         m_CallState: 2
 --- !u!1001 &459999823
@@ -19068,10 +19084,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 902099624}
-  - {fileID: 826444812}
-  - {fileID: 2073032794}
   - {fileID: 560054887}
   - {fileID: 440540095}
+  - {fileID: 826444812}
+  - {fileID: 2073032794}
   m_Father: {fileID: 1486962445}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -20870,7 +20886,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 900014783}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 118242152}
+        m_TargetAssemblyTypeName: PlayFabManager, Assembly-CSharp
+        m_MethodName: GetLeaderboardShow
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Leaderboard_Hard
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &900014783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24226,7 +24254,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1455820006}
   m_OnClick:
     m_PersistentCalls:
@@ -25845,10 +25873,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 772301509}
-  - {fileID: 702957675}
-  - {fileID: 1481723224}
   - {fileID: 533311474}
   - {fileID: 734458095}
+  - {fileID: 702957675}
+  - {fileID: 1481723224}
   m_Father: {fileID: 1486962445}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -28006,7 +28034,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 130}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1292817108
 MonoBehaviour:
@@ -29268,6 +29296,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 304277421}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1996506072}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: PlayGameButtonClick
@@ -29277,7 +29317,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Easy
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1347813772
@@ -31337,7 +31377,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Leaderboard_Medium
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1457884862
@@ -32867,6 +32907,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 118242152}
+        m_TargetAssemblyTypeName: PlayFabManager, Assembly-CSharp
+        m_MethodName: GetLeaderboardShow
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Leaderboard_Free
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1526227398
 GameObject:
   m_ObjectHideFlags: 0
@@ -33488,7 +33540,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1542213651}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 118242152}
+        m_TargetAssemblyTypeName: PlayFabManager, Assembly-CSharp
+        m_MethodName: GetLeaderboardShow
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Leaderboard_Easy
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1542213651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38358,7 +38422,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1712018762}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 118242152}
+        m_TargetAssemblyTypeName: PlayFabManager, Assembly-CSharp
+        m_MethodName: GetLeaderboardShow
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Leaderboard_Medium
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1712018762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41327,7 +41403,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1455820006}
   m_OnClick:
     m_PersistentCalls:
@@ -49089,10 +49165,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 48805602}
-  - {fileID: 2103059893}
-  - {fileID: 1818106799}
   - {fileID: 2124259089}
   - {fileID: 1994749755}
+  - {fileID: 2103059893}
+  - {fileID: 1818106799}
   m_Father: {fileID: 1486962445}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}

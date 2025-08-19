@@ -19,11 +19,18 @@ public class PlayFabManager : MonoBehaviour
     public bool IsLoggedIn { get; private set; }
     [Header("UI Free Leaderboard References")]
     public Transform leaderboardContainer;          // Parent where entries will be spawned
+    public Transform leaderboardContainerCompete;          // Parent where entries will be spawned
     public GameObject leaderboardEntryPrefab;       // Prefab for each row
     public Sprite defaultAvatar;                    // Fallback image if no avatar set
-    public GameObject top1;
-    public GameObject top2;
-    public GameObject top3;
+    [Header("Top Slots - Free")]
+    public GameObject top1Free;
+    public GameObject top2Free;
+    public GameObject top3Free;
+
+    [Header("Top Slots - Compete")]
+    public GameObject top1Compete;
+    public GameObject top2Compete;
+    public GameObject top3Compete;
     private List<GameObject> spawnedEntries = new List<GameObject>();
     void Awake()
     {
@@ -218,7 +225,7 @@ public class PlayFabManager : MonoBehaviour
         GetTopLeaderboard(leaderBoardName, 10, OnLeaderboardReceived);
     }
 
-    private void GetTopLeaderboard(string leaderboardName, int maxResults, Action<List<PlayerLeaderboardEntry>> onDone)
+    private void GetTopLeaderboard(string leaderboardName, int maxResults, Action<string, List<PlayerLeaderboardEntry>> onDone)
     {
         var request = new GetLeaderboardRequest
         {
@@ -228,71 +235,91 @@ public class PlayFabManager : MonoBehaviour
         };
 
         PlayFabClientAPI.GetLeaderboard(request,
-            r => onDone?.Invoke(r.Leaderboard),
+            r => onDone?.Invoke(leaderboardName, r.Leaderboard),
             OnPlayFabError);
     }
-
-    public void OnLeaderboardReceived(List<PlayerLeaderboardEntry> leaderboard)
+    public void OnLeaderboardReceived(string leaderboardName, List<PlayerLeaderboardEntry> leaderboard)
     {
-        Debug.Log("Leaderboard received! Count: " + leaderboard.Count);
-        ClearContainer(leaderboardContainer);
-        // Clear old entries
-        foreach (var entry in spawnedEntries)
-            Destroy(entry);
-       // spawnedEntries.Clear();
+        Debug.Log($"Leaderboard received: {leaderboardName} Count: {leaderboard.Count}");
 
-        // Create new entries in sequence
+        // Choose the correct container & top slots
+        Transform targetContainer;
+        GameObject top1Ref = null, top2Ref = null, top3Ref = null;
+
+        if (leaderboardName == "Leaderboard_Free")
+        {
+            Debug.Log("Free leaderboard");
+            targetContainer = leaderboardContainer;
+            top1Ref = top1Free;
+            top2Ref = top2Free;
+            top3Ref = top3Free;
+        }
+        else
+        {
+            Debug.Log("Compete leaderboard");
+            targetContainer = leaderboardContainerCompete;
+            top1Ref = top1Compete;
+            top2Ref = top2Compete;
+            top3Ref = top3Compete;
+        }
+
+        // Clear container
+        ClearContainer(targetContainer);
+
+        // Create new entries
         foreach (var entry in leaderboard)
         {
             GameObject go;
             bool showRank = true;
 
-            // Top 3 → use special slots
-            if (entry.Position == 0 && top1 != null)
+            // Top 3 → use the correct slots
+            if (entry.Position == 0 && top1Ref != null)
             {
-                go = top1;
-                showRank = false; // no rank text for top 3
-            }
-            else if (entry.Position == 1 && top2 != null)
-            {
-                go = top2;
+                go = top1Ref;
                 showRank = false;
             }
-            else if (entry.Position == 2 && top3 != null)
+            else if (entry.Position == 1 && top2Ref != null)
             {
-                go = top3;
+                go = top2Ref;
+                showRank = false;
+            }
+            else if (entry.Position == 2 && top3Ref != null)
+            {
+                go = top3Ref;
                 showRank = false;
             }
             else
             {
-                // 4 onwards → instantiate prefab
-                go = Instantiate(leaderboardEntryPrefab, leaderboardContainer);
+                // 4 onwards → instantiate prefab into the right container
+                go = Instantiate(leaderboardEntryPrefab, targetContainer);
             }
 
-            // Get refs from prefab/slot
+            // Get refs
             var rank = go.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             var name = go.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             var score = go.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
 
-            // Rank logic
             if (showRank)
             {
-
                 var avatar = go.transform.GetChild(3).GetComponent<Image>();
                 rank.text = (entry.Position + 1).ToString();
-            if (defaultAvatar != null)
-                avatar.sprite = defaultAvatar;
-            }
-             // hide text for top 3
 
-            // Assign values
+                if (defaultAvatar != null)
+                    avatar.sprite = defaultAvatar;
+
+                Debug.Log($"[{leaderboardName}] Rank: {rank.text}, Player: {entry.DisplayName}, Score: {entry.StatValue}");
+            }
+            else
+            {
+                Debug.Log($"[{leaderboardName}] Top {entry.Position + 1} Slot → Player: {entry.DisplayName}, Score: {entry.StatValue}");
+            }
+
             name.text = entry.DisplayName ?? "Guest";
             score.text = entry.StatValue.ToString();
-
         }
-
-
     }
+
+
     public void ClearContainer(Transform container)
     {
         for (int i = container.childCount - 1; i >= 0; i--)

@@ -8,7 +8,8 @@ public enum GameMode
     Free,
     Easy,
     Medium,
-    Hard
+    Hard,
+    Compete
 }
 
 public class GameManager : MonoBehaviour
@@ -41,7 +42,8 @@ public class GameManager : MonoBehaviour
             { GameMode.Free,   (0.2f, 0.01f) },
             { GameMode.Easy,   (0.3f, 0.015f) },
             { GameMode.Medium, (0.4f, 0.02f) },
-            { GameMode.Hard,   (0.5f, 0.025f) }
+            { GameMode.Hard,   (0.5f, 0.025f) },
+            { GameMode.Compete,   (0.5f, 0.025f) }
         };
 
     private void Awake()
@@ -143,7 +145,7 @@ public class GameManager : MonoBehaviour
             GameMode.Easy => "Leaderboard_Easy",
             GameMode.Medium => "Leaderboard_Medium",
             GameMode.Hard => "Leaderboard_Hard",
-            _ => "Leaderboard_Free"
+            GameMode.Compete => "Leaderboard_Compete"
         };
 
         if (PlayFabManager.Instance != null)
