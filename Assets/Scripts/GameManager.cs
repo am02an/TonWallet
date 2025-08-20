@@ -2,7 +2,8 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
-
+using UnityEngine.Networking;
+using UnityEngine.UI;
 public enum GameMode
 {
     Free,
@@ -36,6 +37,8 @@ public class GameManager : MonoBehaviour
     public float timer = 0f;
     public static GameMode CurrentMode = GameMode.Free;
     private string _currentMode;
+    [SerializeField] private RawImage targetRawImage; // For RawImage UI
+    [SerializeField] private Image targetImage;
     private readonly Dictionary<GameMode, (float obsSpeed, float bgSpeed)> modeSettings =
         new Dictionary<GameMode, (float, float)>
         {
@@ -124,16 +127,64 @@ public class GameManager : MonoBehaviour
     {
         TelegramBridge bridge = new TelegramBridge();
         string username = bridge.GetUsername();
+        string userImageUrl = bridge.GetUserImage();
         SetTelegramUsername(username);
+        StartCoroutine(DownloadImage(userImageUrl));
         PlayFabManager.Instance.LoginNewAccount(username);
         Debug.Log("Telegram username: " + username);
+        Debug.Log("Telegram Image: " + userImageUrl);
     }
+    private IEnumerator DownloadImage(string url)
+    {
+        using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(url))
+        {
+            yield return request.SendWebRequest();
 
+#if UNITY_2020_2_OR_NEWER
+            if (request.result != UnityWebRequest.Result.Success)
+#else
+            if (request.isNetworkError || request.isHttpError)
+#endif
+            {
+                Debug.LogError($"Failed to load image from {url}: {request.error}");
+            }
+            else
+            {
+                Texture2D texture = DownloadHandlerTexture.GetContent(request);
+
+                if (targetRawImage != null)
+                {
+                    targetRawImage.texture = texture;
+                }
+
+                if (targetImage != null)
+                {
+                    Sprite sprite = Sprite.Create(
+                        texture,
+                        new Rect(0, 0, texture.width, texture.height),
+                        new Vector2(0.5f, 0.5f)
+                    );
+                    targetImage.sprite = sprite;
+                }
+
+                Debug.Log("Image loaded successfully from: " + url);
+            }
+        }
+    }
     public void SetTelegramUsername(string username)
     {
         TelegramUsername = username;
+
+        // Truncate if username is longer than 6 characters
+        string displayName = TelegramUsername;
+        if (displayName.Length > 6)
+        {
+            displayName = displayName.Substring(0, 6) + "...";
+        }
+
         if (UserName != null)
-            UserName.text = TelegramUsername;
+            UserName.text = displayName;
+
         Debug.Log("Telegram Username: " + username);
     }
 

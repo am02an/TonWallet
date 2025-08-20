@@ -353,7 +353,16 @@ public class PlayFabManager : MonoBehaviour
                 Debug.Log($"[{leaderboardName}] Top {entry.Position + 1} Slot → Player: {entry.DisplayName}, Score: {entry.StatValue}");
             }
 
-            name.text = entry.DisplayName ?? "Guest";
+            string displayName = entry.DisplayName ?? "Guest";
+
+            // If the name has more than 6 characters, cut it and add "..."
+            if (displayName.Length > 6)
+            {
+                displayName = displayName.Substring(0, 6) + "...";
+            }
+
+            name.text = displayName;
+
             score.text = entry.StatValue.ToString();
         }
     }
