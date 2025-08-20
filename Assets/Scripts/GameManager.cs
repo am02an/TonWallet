@@ -243,6 +243,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayGameButtonClick(string gameMode)
     {
+        Debug.Log(gameMode);
         StartCoroutine(PlayGame(gameMode));
     }
 
