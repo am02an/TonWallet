@@ -83,6 +83,7 @@ public class PlayFabManager : MonoBehaviour
             // Check if this is a NEW account
             if (result.NewlyCreated)
             {
+                SavePlayerData();
                 Debug.Log("🎉 New account created, setting display name...");
                 UpdateDisplayName(username);
             }
@@ -366,7 +367,27 @@ public class PlayFabManager : MonoBehaviour
             score.text = entry.StatValue.ToString();
         }
     }
+    public void SavePlayerData()
+    {
+        var request = new UpdateUserDataRequest
+        {
+            Data = new Dictionary<string, string>
+            {
+                { "PlayerGameData", SaveManager.Insatnce.GetPlayerdata() }  // saving the whole JSON as a string
+            }
+        };
 
+        PlayFabClientAPI.UpdateUserData(request, OnDataSendSuccess, OnDataSendError);
+    }
+    private void OnDataSendSuccess(UpdateUserDataResult result)
+    {
+        Debug.Log("✅ Player data saved successfully to PlayFab.");
+    }
+
+    private void OnDataSendError(PlayFabError error)
+    {
+        Debug.LogError("❌ Failed to save player data: " + error.GenerateErrorReport());
+    }
     public void ClearContainer(Transform container)
     {
         for (int i = container.childCount - 1; i >= 0; i--)
