@@ -6,6 +6,7 @@ using UnitonConnect.Core.Data;
 using UnitonConnect.Core.Utils;
 using UnitonConnect.Runtime.Data;
 using UnitonConnect.DeFi;
+using System;
 
 namespace UnitonConnect.Core.Demo
 {
@@ -40,8 +41,8 @@ namespace UnitonConnect.Core.Demo
         public TextMeshProUGUI profileName;
         public TextMeshProUGUI walletaddressProfile;
         public Button discconectButton;
-      
-        private bool isWalletSettingOpen=false;
+
+        private bool isWalletSettingOpen = false;
         private void Awake()
         {
             _unitonSDK = UnitonConnectSDK.Instance;
@@ -106,9 +107,10 @@ namespace UnitonConnect.Core.Demo
                 _sendJettonTransactionButton.interactable = false;
                 _openNftCollectionButton.interactable = false;
             }
-            
+
+         
         }
-     
+       
         public void SetWalletSetting()
         {
             if (walletPanel.activeInHierarchy)
@@ -122,7 +124,7 @@ namespace UnitonConnect.Core.Demo
                     {
                         Debug.Log("Balance received: " + balance);
                         balanceText.text = $"{balance}";
-                        GameManager.Instance.walletBalance = (float)balance; 
+                        GameManager.Instance.walletBalance = (float)balance;
 
                     });
                 }
@@ -135,7 +137,7 @@ namespace UnitonConnect.Core.Demo
         }
         public void OpenWalletPanel()
         {
-            if(_unitonSDK.IsWalletConnected)
+            if (_unitonSDK.IsWalletConnected)
             {
                 walletSetting.SetActive(true);
             }
@@ -401,6 +403,41 @@ namespace UnitonConnect.Core.Demo
             }
 
         }
-    }
+        public TextMeshProUGUI timerText; // Assign in Inspector
+        public TextMeshProUGUI comptetetimerText; // Assign in Inspector
 
+        public int numberSize = 60;       // Bigger font size for numbers
+        public int labelSize = 35;
+        void Update()
+        {
+            DateTime now = DateTime.UtcNow; // Or DateTime.Now for local time
+
+            // Find the most recent Sunday midnight
+            int daysSinceSunday = (int)now.DayOfWeek; // Sunday = 0, Monday = 1, ...
+            DateTime lastSunday = now.Date.AddDays(-daysSinceSunday);
+
+            // Next Sunday midnight
+            DateTime nextSunday = lastSunday.AddDays(7);
+
+            // Remaining time
+            TimeSpan remaining = nextSunday - now;
+
+            if (remaining.TotalSeconds > 0)
+            {
+                timerText.text =
+                    $"<size={numberSize}>{remaining.Days}</size><size={labelSize}>D</size> " +
+                    $"<size={numberSize}>{remaining.Hours}</size><size={labelSize}>H</size> " +
+                    $"<size={numberSize}>{remaining.Minutes}</size><size={labelSize}>M</size>";
+                comptetetimerText.text = timerText.text;
+
+            }
+            else
+            {
+                timerText.text = $"<size={numberSize}>0</size><size={labelSize}>D</size> " +
+                                 $"<size={numberSize}>0</size><size={labelSize}>H</size> " +
+                                 $"<size={numberSize}>0</size><size={labelSize}>M</size>";
+                comptetetimerText.text = timerText.text;
+            }
+        }
+    }
 }

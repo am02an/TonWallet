@@ -3646,7 +3646,7 @@ GameObject:
   - component: {fileID: 118242152}
   - component: {fileID: 118242154}
   m_Layer: 0
-  m_Name: PlayFabManager
+  m_Name: PlayfabManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14721,6 +14721,10 @@ MonoBehaviour:
   profileName: {fileID: 923614867}
   walletaddressProfile: {fileID: 27245987}
   discconectButton: {fileID: 1568742348}
+  timerText: {fileID: 2014104730}
+  comptetetimerText: {fileID: 1087865707}
+  numberSize: 75
+  labelSize: 45
 --- !u!1 &517403755
 GameObject:
   m_ObjectHideFlags: 0
@@ -24436,7 +24440,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 15.37, y: 0.98}
+  m_AnchoredPosition: {x: 15.369999, y: 0.97999954}
   m_SizeDelta: {x: -46.01, y: -11.64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &781918266
@@ -34008,7 +34012,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 30.6, y: -3.3}
+  m_AnchoredPosition: {x: 30.599998, y: -3.3}
   m_SizeDelta: {x: 25, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1103492637
@@ -66120,8 +66124,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -5.399994, y: 7.200001}
-  m_SizeDelta: {x: -10.8, y: -14.4}
+  m_AnchoredPosition: {x: -5.399994, y: 3.7999992}
+  m_SizeDelta: {x: -10.8, y: -7.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2014104730
 MonoBehaviour:
@@ -66143,7 +66147,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: -----
+  m_text: 2 D 12 H 15 M
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 81de693988e0833408a5d8f5b643a826, type: 2}
   m_sharedMaterial: {fileID: -3694055200800684055, guid: 81de693988e0833408a5d8f5b643a826, type: 2}
