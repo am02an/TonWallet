@@ -32,6 +32,13 @@ public class PlayFabManager : MonoBehaviour
     public GameObject top2Compete;
     public GameObject top3Compete;
     private List<GameObject> spawnedEntries = new List<GameObject>();
+
+    [Header(" Leaderboard UI refs")]
+    
+    public LeaderboardUI[] leaderboards;   // Drag your 3 leaderboards here in Inspector
+    private Dictionary<string, LeaderboardUI> leaderboardMap;
+
+    private TimeSpan resetCooldown = TimeSpan.FromDays(1);
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -41,6 +48,18 @@ public class PlayFabManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        leaderboardMap = new Dictionary<string, LeaderboardUI>();
+        foreach (var lb in leaderboards)
+        {
+            if (!leaderboardMap.ContainsKey(lb.statName))
+                leaderboardMap.Add(lb.statName, lb);
+        }
+    }
+   
+
+    void Update()
+    {
+        UpdateTimers();
     }
 
     void Start()
@@ -367,6 +386,58 @@ public class PlayFabManager : MonoBehaviour
             score.text = entry.StatValue.ToString();
         }
     }
+
+
+    public void FetchLeaderboard(string statName)
+    {
+        if (!leaderboardMap.ContainsKey(statName))
+        {
+            Debug.LogError("No UI reference found for leaderboard: " + statName);
+            return;
+        }
+
+        var lb = leaderboardMap[statName];
+
+        var request = new GetLeaderboardAroundPlayerRequest
+        {
+            StatisticName = statName,
+            MaxResultsCount = 1
+        };
+
+        PlayFabClientAPI.GetLeaderboardAroundPlayer(request,
+            result =>
+            {
+                if (result.Leaderboard.Count > 0)
+                {
+                    var entry = result.Leaderboard[0];
+                    lb.rankText.text = "#" + (entry.Position + 1);
+                    lb.scoreText.text = entry.StatValue.ToString();
+                }
+                else
+                {
+                    lb.rankText.text = "-";
+                    lb.scoreText.text = "0";
+                }
+            },
+            error => Debug.LogError("Leaderboard error: " + error.GenerateErrorReport()));
+    }
+    private void OnError(PlayFabError error)
+    {
+        Debug.LogError("Error getting leaderboard: " + error.GenerateErrorReport());
+    }
+    // ✅ Updates countdown for all leaderboards
+    private void UpdateTimers()
+    {
+        DateTime now = DateTime.UtcNow;
+        DateTime nextReset = DateTime.UtcNow.Date.AddDays(1); // midnight reset
+        TimeSpan timeLeft = nextReset - now;
+
+        foreach (var lb in leaderboardMap.Values)
+        {
+            lb.timerText.text = string.Format("{0:D2}:{1:D2}:{2:D2}",
+                timeLeft.Hours, timeLeft.Minutes, timeLeft.Seconds);
+        }
+    }
     public void SavePlayerData()
     {
         var request = new UpdateUserDataRequest
@@ -396,4 +467,12 @@ public class PlayFabManager : MonoBehaviour
         }
     }
 
+}
+[System.Serializable]
+public class LeaderboardUI
+{
+    public string statName;        // Leaderboard name in PlayFab
+    public TextMeshProUGUI rankText;          // UI reference for Rank
+    public TextMeshProUGUI scoreText;         // UI reference for Score
+    public TextMeshProUGUI timerText;         // UI reference for countdown
 }

@@ -39,7 +39,7 @@ namespace UnitonConnect.Core.Demo
         [Header("Profile")]
         public TextMeshProUGUI profileName;
         public TextMeshProUGUI walletaddressProfile;
-        public TextMeshProUGUI walletBalanceProfile;
+        public Button discconectButton;
       
         private bool isWalletSettingOpen=false;
         private void Awake()
@@ -251,6 +251,7 @@ namespace UnitonConnect.Core.Demo
         {
             if (_unitonSDK.IsWalletConnected)
             {
+                discconectButton.interactable = true;
                 var userAddress = wallet.Address;
 
                 var successConnectMessage = $"Wallet is connected, " +
@@ -317,6 +318,7 @@ namespace UnitonConnect.Core.Demo
             {
                 return;
             }
+            discconectButton.interactable = false;
 
             _nftCollectionPanel.RemoveNftCollectionStorage(true);
 
